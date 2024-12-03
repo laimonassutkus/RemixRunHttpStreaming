@@ -1,10 +1,4 @@
-Since V3 SingleFetch flag is enabled in Vite config:
-
-```javascript
-v3_singleFetch: true
-```
-
-You can simply return an object in loader function that contains a promise:
+Simply return an object in loader function that contains a promise:
 
 ```javascript
 export async function loader() {

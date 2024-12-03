@@ -1,12 +1,12 @@
-import {Await, useLoaderData} from "@remix-run/react"
 import {Suspense} from "react"
+import {Await, useLoaderData} from "react-router"
 
 export async function loader() {
     const messagePromise = new Promise(resolve => {
         setTimeout(() => {
             console.log("Loader resolved!")
             resolve("Hello World !")
-        }, 20_000)
+        }, 7_000)
     })
 
     return {
