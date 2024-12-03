@@ -1,40 +1,44 @@
-# Welcome to Remix!
+Since V3 SingleFetch flag is enabled in Vite config:
 
-- 📖 [Remix docs](https://remix.run/docs)
-
-## Development
-
-Run the dev server:
-
-```shellscript
-npm run dev
+```javascript
+v3_singleFetch: true
 ```
 
-## Deployment
+You can simply return an object in loader function that contains a promise:
 
-First, build your app for production:
+```javascript
+export async function loader() {
+    const messagePromise = new Promise(resolve => {
+        setTimeout(() => {
+            console.log("Loader resolved!")
+            resolve("Hello World !")
+        }, 20_000)
+    })
 
-```sh
-npm run build
+    return {
+        message: messagePromise
+    }
+}
 ```
 
-Then run the app in production mode:
+Then your client-side html can work with the promise using `Await` and `Suspense`:
 
-```sh
-npm start
+```javascript
+export default function Index() {
+    const {message} = useLoaderData<typeof loader>()
+
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Await resolve={message}>
+                {(message) => <div>{message}</div>}
+            </Await>
+        </Suspense>
+    )
+}
 ```
 
-Now you'll need to pick a host to deploy it to.
+P.S. increase your server timeout in `entry.server.tsx`:
 
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+```javascript
+const ABORT_DELAY = 60_000
+```
